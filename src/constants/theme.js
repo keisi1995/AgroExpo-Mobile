@@ -10,6 +10,7 @@ export const COLORS = {
 	secondary: '#544C4C',
 	secondaryGray: 'rgba(84, 76, 76, 0.14)',
 	color: '#FFFFFF',
+	backgroundColor: 'transparent',
     colorButton: [
         '#16A33F', '#56C877'
     ],

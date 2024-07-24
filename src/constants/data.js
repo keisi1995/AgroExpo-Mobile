@@ -7,4 +7,9 @@ export const photos = [
   images.photo4,
   images.photo5,
   images.photo6,
+  images.ArandanosFondo,
+  images.Fondo1,
+  images.blueberry,
+  images.Fondo2,  
+  images.empresa
 ]

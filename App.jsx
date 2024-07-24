@@ -97,8 +97,14 @@ const App = () => {
 
 	if (loginState.isLoading) {
 		return (
-			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-				<ActivityIndicator size="large" />
+			<View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+				{/* <ActivityIndicator size="large"/> */}
+				<LottieView
+					source={require('./src/assets/animation/cat-animation.json')}
+					style={{width: "70%", height: "70%"}}
+					autoPlay
+					loop
+				/>
 			</View>
 		);
 	}

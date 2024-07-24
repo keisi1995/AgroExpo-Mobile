@@ -1,19 +1,17 @@
-import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import { LinearGradient } from 'react-native-linear-gradient';
+import React, { useState, useContext } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ImageBackground, Image, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
 import { useTheme } from 'react-native-paper';
 import { AuthContext } from '../../components/context';
-
+import * as Animatable from 'react-native-animatable';
 import styles from './styles';
-import { images, COLORS } from '../../constants/';
-
+import Feather from 'react-native-vector-icons/Feather';
+import { images } from '../../constants/';
 const SignInScreen = ({ navigation }) => {
 	const { authContext } = useContext(AuthContext);
 	const { signIn } = authContext;
-	const { colors } = useTheme();
+	const [passwordVisible, setPasswordVisible] = useState(false);
 
 	const [dataForm, setDataForm] = React.useState({
 		usuario: { data: null, isValid: true, minLength: 5, maxLength: 20 },
@@ -36,7 +34,6 @@ const SignInScreen = ({ navigation }) => {
 		});
 		return data;
 	}
-
 	const handleLogin = async () => {
 		try {
 			console.log(process.env.API_URL)
@@ -44,16 +41,16 @@ const SignInScreen = ({ navigation }) => {
 				Alert.alert('Entrada incorrecta!', 'El campo usuario o contraseña no puede estar vacío.', [{ text: 'Ok' }]);
 				return;
 			}
-			// console.log(process.env)
+			// console.log(process.env)							
 			const response = await fetch(`${process.env.API_URL}/autenticar`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(getDataForm()),
 			});
 
-			if (!response.ok) {
-				throw new Error('Error al guardar los datos');
-			}
+			// if (!response.ok) {
+			// 	throw new Error('Error al guardar los datos');
+			// }
 
 			const rpt = await response.json();
 
@@ -66,106 +63,86 @@ const SignInScreen = ({ navigation }) => {
 			console.error('Error:', error);
 		}
 	}
-
 	return (
-		<View style={styles.container}>
-			<View style={styles.header}>
-				<Text style={styles.textHeader}>Inicio de Sesión</Text>
-			</View>
+		<ImageBackground
+			source={images.ArandanosFondo}
+			style={styles.background}>
+			<View style={styles.overlay}>
+				<View style={styles.header}>
 
-			<View style={[styles.section, { backgroundColor: colors.background }]}>
-				{/* seccion del userName */}
-				<Text style={[styles.label, { color: colors.text }]}>Usuario</Text>
-				<View style={styles.sectionInput}>
-					<FontAwesome
-						name="user-o"
-						color={colors.text}
-						size={20}
-					/>
-					<TextInput
-						placeholder="Ingrese usuario"
-						placeholderTextColor="#666666"
-						style={[styles.textInput, { color: colors.text }]}
-						autoCapitalize="none"
-						value={dataForm.usuario.data}
-						onChangeText={(val) => textInputChange(val, 'usuario')}
-					// onEndEditing={(e)=> handleValidUser(e.nativeEvent.text)}
-					/>
+					<Text style={styles.textHeader}>Inicio de Sesión</Text>
+				</View>
+
+				<View style={styles.content}>
+					<Text style={styles.textHeader1}>Usuario</Text>
+					<View style={styles.inputContainer}>
+
+						<Icon name="person-outline" size={20} color="#fff" style={styles.icon} />
+						<TextInput
+							style={styles.input}
+							placeholder="Ingrese usuario"
+							placeholderTextColor="#fff"
+							autoCapitalize="none"
+							value={dataForm.usuario.data}
+							onChangeText={(val) => textInputChange(val, 'usuario')}
+						/>
+						{
+							dataForm.usuario.isValid && dataForm.usuario.data != null &&
+							<Animatable.View
+								animation="bounceIn"
+							>
+								<Feather
+									name="check-circle"
+									color="green"
+									size={20}
+								/>
+							</Animatable.View>
+						}
+					</View>
 					{
-						dataForm.usuario.isValid && dataForm.usuario.data != null &&
-						<Animatable.View
-							animation="bounceIn"
-						>
-							<Feather
-								name="check-circle"
-								color="green"
-								size={20}
-							/>
+						!dataForm.usuario.isValid && dataForm.usuario.data != '' &&
+						<Animatable.View animation="fadeInLeft" duration={500} >
+							<Text style={styles.errorMsg}>La usuario debe tener como minimo {dataForm.usuario.minLength} caracteres.</Text>
 						</Animatable.View>
 					}
-				</View>
-				{
-					!dataForm.usuario.isValid && dataForm.usuario.data != '' &&
-					<Animatable.View animation="fadeInLeft" duration={500} >
-						<Text style={styles.errorMsg}>La usuario debe tener como minimo {dataForm.usuario.minLength} caracteres.</Text>
-					</Animatable.View>
-				}
-				{/* fin */}
-
-				{/* seccion del password */}
-				<Text style={[styles.label, { color: colors.text, marginTop: 35 }]}>Contraseña</Text>
-				<View style={styles.sectionInput}>
-					<Feather
-						name="lock"
-						color={colors.text}
-						size={20}
-					/>
-					<TextInput
-						placeholder="Ingrese su contraseña"
-						placeholderTextColor="#666666"
-						secureTextEntry={dataForm.password.secureTextEntry ? true : false}
-						style={[styles.textInput, { color: colors.text }]}
-						autoCapitalize="none"
-						value={dataForm.password.data}
-						onChangeText={(val) => textInputChange(val, 'password')}
-					/>
-					<TouchableOpacity
-						onPress={(updateSecureTextEntry)}
-					>
-						<Feather
-							name={dataForm.password.secureTextEntry ? "eye-off" : "eye"}
-							color="grey"
-							size={20}
+					<Text style={styles.textHeader1}>Contraseña </Text>
+					<View style={styles.inputContainer}>
+						<Icon name="lock-closed-outline" size={20} color="#fff" style={styles.icon} />
+						<TextInput
+							style={styles.input}
+							placeholder="Contraseña"
+							placeholderTextColor="#fff"
+							secureTextEntry={!passwordVisible}
+							autoCapitalize="none"
+							value={dataForm.password.data}
+							onChangeText={(val) => textInputChange(val, 'password')}
 						/>
-					</TouchableOpacity>
-				</View>
-				{
-					!dataForm.password.isValid &&
-					<Animatable.View animation="fadeInLeft" duration={500}>
-						<Text style={styles.errorMsg}>La contraseña debe tener como minimo {dataForm.password.minLength} caracteres.</Text>
-					</Animatable.View>
-				}
-				{/* fin */}
-
-
-				{/* seccion de los buttons */}
-				<View style={styles.button}>
-					<TouchableOpacity
-						style={styles.signIn}
-						onPress={() => { handleLogin() }}
-					>
-						<LinearGradient
-							colors={COLORS.colorButton}
-							style={styles.signIn}
-						>
-							<Text style={[styles.textSign, {
-								color: '#fff'
-							}]}>Iniciar sesión</Text>
-						</LinearGradient>
+						<TouchableOpacity
+							onPress={(updateSecureTextEntry)}
+						></TouchableOpacity>
+						<TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+							<Icon name={passwordVisible ? "eye-off-outline" : "eye-outline"} size={20} color="#fff" style={styles.icon} />
+						</TouchableOpacity>
+					</View>
+					{
+						!dataForm.password.isValid &&
+						<Animatable.View animation="fadeInLeft" duration={500}>
+							<Text style={styles.errorMsg}>La contraseña debe tener como minimo {dataForm.password.minLength} caracteres.</Text>
+						</Animatable.View>
+					}
+					<TouchableOpacity style={styles.loginButton} onPress={() => { handleLogin() }}>
+						<Text style={styles.loginButtonText}>INGRESAR</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
-		</View>
+
+			<Text style={styles.loginButtonText1}>Version 1.0 </Text>
+			<Image
+				source={images.empresa}
+				resizeMode="cover"
+				style={{ height: 30, width: 30, borderRadius: 10, position: 'absolute-end', left: 380, marginTop: -30, }}
+			/>
+		</ImageBackground>
 	);
 };
 

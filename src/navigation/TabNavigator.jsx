@@ -21,15 +21,13 @@ const TabNavigator = () => {
 				headerShown: false,
 				tabBarShowLabel: true,
 				tabBarStyle: {
-					backgroundColor: COLORS.color,
+					backgroundColor: '#6FC0D3',
 					height: 60,
 					paddingBottom: 5,
 					paddingTop: 5
 				},
-				// tabBarInactiveTintColor: '#fff',
-				tabBarActiveTintColor: '#16A33F',
-				// tabBarActiveBackgroundColor: 'red',
-				// tabBarInactiveBackgroundColor: 'blue'
+				tabBarInactiveTintColor: '#F5F5F5',
+				tabBarActiveTintColor: '#6A0DAD',
 			}}
 		>
 			{
@@ -43,7 +41,7 @@ const TabNavigator = () => {
 								title: _.label,
 								tabBarIcon: ({ color, size }) => (
 									<MaterialCommunityIcons name={_.icon} size={25} color={color} />
-								)
+								),
 							}}
 						/>
 					)

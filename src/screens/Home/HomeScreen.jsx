@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { FlatList, View, Text, TouchableHighlight, RefreshControl } from 'react-native';
+import { FlatList, View, Text, TouchableHighlight, RefreshControl,ImageBackground ,Image } from 'react-native';
 import { styles, RecipeCard } from './styles';
-import { COLORS } from '../../constants/';
+import { COLORS ,images } from '../../constants/';
 import { AuthContext } from '../../components/context';
 import { jwtDecode } from 'jwt-decode';
 import { API_URL } from "@env"
@@ -20,23 +20,25 @@ const HomeScreen = ({ navigation }) => {
 				navigation.navigate('BayaScreen', { control: item });
 			}}
 		>
-			<View style={RecipeCard.container}>
-				<Text style={RecipeCard.label}>
-					Lote: {item.Floracion.detalle}
-				</Text>
-				<Text style={RecipeCard.label}>
-					Turno: {item.Floracion.Turno.detalle}
-				</Text>
-				<Text style={RecipeCard.label}>
-					Cantidad bayas: {item.Floracion.cantidad_bayas}
-				</Text>
-				<Text style={RecipeCard.label}>
-					Fecha: {item.fecha_inspeccion}
-				</Text>
-				<Text style={RecipeCard.label}>
-					Tipo Control: {item.TipoControl.detalle}
-				</Text>
-			</View>
+			 <View style={RecipeCard.taskCard}>
+				<Text style={RecipeCard.taskText1}>{item.TipoControl.detalle}</Text>
+				<View style={RecipeCard.taskText3}>
+      				<Text style={RecipeCard.taskText}>Lote : </Text>
+				  	<Text style={RecipeCard.taskText2}>{item.Floracion.detalle}</Text>
+				  </View>
+				<View style={RecipeCard.taskText3}>
+					<Text style={RecipeCard.taskText}>Turno : </Text>
+					<Text style={RecipeCard.taskText2}> {item.Floracion.Turno.detalle}</Text>
+				</View>
+				<View style={RecipeCard.taskText3}>
+      				<Text style={RecipeCard.taskText}>Cantidad de baya : </Text>
+					<Text style={RecipeCard.taskText2}> {item.Floracion.cantidad_bayas}</Text>
+				</View>
+				<View style={RecipeCard.taskText3}>
+      				<Text style={RecipeCard.taskText}>Fecha : </Text>
+					<Text style={RecipeCard.taskText2}> {item.fecha_inspeccion}</Text>
+      			</View>
+    			</View>
 		</TouchableHighlight>
 	);
 
@@ -73,15 +75,29 @@ const HomeScreen = ({ navigation }) => {
 	}, [])
 
 	return (
+		<ImageBackground
+					source={images.Fondo2}
+					style={styles.background}>
 		<View style={styles.container}>
 			<View style={styles.header}>
-				<Text style={styles.title}>Bienvenido {loginState.nombre_completo}</Text>
-			</View>
-
-			<View style={styles.section}>
+			<Image
+					source={images.profile}
+					resizeMode="cover"
+					style={{ height: 60, width: 60,  borderRadius: 15, marginRight: 20, marginLeft : 20}}
+				/>
+				  <View>
+					<Text style={styles.name}>{loginState.nombre_completo}</Text>
+					<Text style={styles.role}>Agricultor</Text>
+					</View>
+				</View>
+				<View>
+				{/* <Text style={styles.title}>Mis Tareas</Text> */}
+				</View>
+	
+	
 				<FlatList
 					vertical
-					showsVerticalScrollIndicator={false}
+					showsVerticalScrollIndicator={false}	
 					numColumns={1}
 					data={category}
 					renderItem={renderItems}
@@ -89,9 +105,11 @@ const HomeScreen = ({ navigation }) => {
 					refreshControl={
 						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 					}
+					contentContainerStyle={RecipeCard.taskList}
+
 				/>
 			</View>
-		</View>
+		</ImageBackground>
 	);
 };
 

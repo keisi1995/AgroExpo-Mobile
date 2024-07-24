@@ -9,50 +9,83 @@ const SCREEN_HEIGHT = height / 4;
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		// backgroundColor: 'black'
-	},
+		padding: 20,
+		marginTop: 10,
+		marginBottom: 10,
+		
+	  },
 	header: {
-		flex: 2,		
-		width: '100%',
+		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'center',
-		// backgroundColor: 'red',
-	},
+		marginBottom: 20,
+		backgroundColor: '#fff',
+		borderRadius: 10,
+		padding: 20,
+		borderColor: '#562A66',
+		borderWidth: 2,
+	  },
 	section: {
 		flex: 10,
 		paddingTop: 10,
 		// backgroundColor: 'blue'
 	},
-	title: {
-		color: 'black',
+	name: {
+		fontSize: 18,
 		fontWeight: 'bold',
-		fontSize: 30,
+		color: 'black',
 	},
+	role: {
+		fontSize: 14,
+		color: 'black',
+	  },
+	  title: {
+		fontSize: 30,
+		fontWeight: 'bold',
+		color: '#000',
+		marginBottom: 20,
+		textAlign: 'center'
+	  },
+	  background: {
+		flex: 1,
+		resizeMode: 'cover',
+		justifyContent: 'center',
+	
+	  },
 });
 
 export const RecipeCard = StyleSheet.create({
-	container: {
-		flex: 1,
-		width: SCREEN_WIDTH - 20,
-		height: 'auto',
-		// justifyContent: 'center',
-		// alignItems: 'center',
-		borderColor: '#11563B',
-		borderWidth: 1,
+	taskList: {
+		paddingBottom: 20,
+	  },
+	  taskCard: {
+		backgroundColor: 'lightgreen',
+		padding: 15,
+		marginBottom: 20,
+		borderColor: '#fff',
+		borderWidth: 2,
 		borderRadius: 20,
+	  },
+	  taskText: {
+		fontSize: 25,
+		color: '#000',
 		
-		paddingHorizontal: 20,
-		paddingVertical: 20,
-		marginBottom: 10
-	},
-	title: {
-		color: 'black',
-		fontSize: 30,
-	},
-	label: {
-		color: 'black',
-		fontSize: 18,		
-	}
-});
+	  }, 
+	  taskText2: {
+		fontSize: 25,
+		fontWeight: 'bold',
+		color: '#000',
+		textAlign: 'right',
+	
+		flex: 1,
+	  },
+	 
+	  taskText3: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginBottom: 5,
+		fontWeight: 'bold',
+		color: '#000',
+		textAlign: 'center',
+		
+	  },
+	});

@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert ,ImageBackground, Image } from 'react-native';
 import { styles } from './styles';
-import { COLORS, SIZES } from '../../constants';
+import { COLORS, SIZES ,images } from '../../constants';
 import { AuthContext } from '../../components/context';
 import { API_URL } from "@env"
 
@@ -36,11 +36,11 @@ const RegistroBayaScreen = ({ navigation, route }) => {
             },
             body: JSON.stringify(getDataForm()),
         });
-
+        console.log(response);
         if (!response.ok) { throw new Error('Error al obtener los datos'); }
 
         const rpt = await response.json();
-
+        console.log(rpt);
         if (rpt.success) {
             // Alert.alert('Success!', rpt.message, [{ text: 'Ok' }]);          
             navigation.goBack();
@@ -49,72 +49,86 @@ const RegistroBayaScreen = ({ navigation, route }) => {
         }
     }
 
-    const ButtonAction = ({ text, onPress }) => {
-        return (
-            <TouchableOpacity
-                style={{
-                    width: 130,
-                    height: 36,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: COLORS.primary,
-                    borderRadius: 10,
-                    marginHorizontal: SIZES.padding * 0.5,
-                }}
-                onPress={onPress}
-            >
-                <Text style={{
-                    fontFamily: 'regular',
-                    fontSize: SIZES.body4,
-                    lineHeight: 20,
-                    color: COLORS.white
-                }} > {text}</Text>
-            </TouchableOpacity>
-        )
-    }
-
     useEffect(() => {
     }, [])
 
     return (
+        <ImageBackground
+					source={images.Fondo2}
+					style={styles.background}>
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Registro de Bayas</Text>
+            <Image
+					source={images.profile}
+					resizeMode="cover"
+					style={{ height: 60, width: 60,  borderRadius: 15, marginRight: 20, marginLeft : 20}}
+				/>
+				  <View>
+					<Text style={styles.name}>{loginState.nombre_completo}</Text>
+					<Text style={styles.role}>Agricultor</Text>
+					</View>
             </View>
-
-            <View style={styles.section}>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}>Detalle:</Text>
+            <Text style={styles.title}>Registro de Bayas</Text> 
+            <View style={styles.form}>
+          
+                <View style={styles.formRow}>
+                    <Text style={styles.label}>Detalle</Text>
                     <TextInput
                         placeholderTextColor="#666666"
-                        style={{ fontSize: 20, }}
+                        style={{ fontSize: 35, 
+                            fontWeight: 'bold',
+                            borderColor: '#562A66',
+                            borderWidth: 2,
+                            borderRadius: 20, 
+                            color: '#562A66',
+                            width:  160,
+                            textAlign: 'center',}}
                         value={dataForm.detalle.data}
                         onChangeText={(val) => textInputChange(val, 'detalle')}
                     />
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}>Posición Líneal:</Text>
-                    <TextInput
+            <View style={styles.formRow}>
+                <Text style={styles.label}>Posición Lineal</Text>
+                <TextInput
                         placeholderTextColor="#666666"
-                        style={{}}
+                        style={{ fontSize: 35, 
+                            fontWeight: 'bold',
+                            borderColor: '#562A66',
+                            borderWidth: 2,
+                            borderRadius: 20, 
+                            color: '#562A66',
+                            width:  160,
+                            textAlign: 'center',}}
                         value={dataForm.posicion_lineal.data}
                         onChangeText={(val) => textInputChange(val, 'posicion_lineal')}
                     />
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}>Posición Fila:</Text>
-                    <TextInput
+            </View>
+            <View style={styles.formRow}>
+                <Text style={styles.label}>Posición Fila</Text>
+                <TextInput
                         placeholderTextColor="#666666"
                         value={dataForm.posicion_fila.data}
+                        style={{ fontSize: 35, 
+                            fontWeight: 'bold',
+                            borderColor: '#562A66',
+                            borderWidth: 2,
+                            borderRadius: 20, 
+                            color: '#562A66',
+                            width:  160,
+                            textAlign: 'center',}}
                         onChangeText={(val) => textInputChange(val, 'posicion_fila')}
                     />
-                </View>
-
-                <View>
-                    <ButtonAction text={"Guardar"} onPress={() => save()} />
-                </View>
             </View>
-        </View>
+            <Image
+					source={images.blueberry}
+					resizeMode="cover"
+					style={{ height: 80, width: 80,  borderRadius: 15, alignSelf : 'center' , marginTop: 20}}/>
+            <TouchableOpacity style={styles.button} onPress={() => save()} >
+                        <Text style={styles.buttonText}>Guardar</Text>
+            </TouchableOpacity>
+      </View>
+    </View>
+    </ImageBackground>
     );
 };
 

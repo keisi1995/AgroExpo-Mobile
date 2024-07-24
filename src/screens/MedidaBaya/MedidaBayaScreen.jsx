@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ImageBackground, Image } from 'react-native';
 import { styles } from './styles';
-import { COLORS, SIZES } from '../../constants';
+import { COLORS, SIZES, images } from '../../constants';
 import { AuthContext } from '../../components/context';
 import { API_URL } from "@env"
 
@@ -10,7 +10,8 @@ const MedidaBayaScreen = ({ navigation, route }) => {
     const { loginState } = useContext(AuthContext);
 
     const [dataForm, setDataForm] = useState({
-        medida: { data: null, isValid: true, minLength: 1, maxLength: 50 },
+        id_control_baya: { data: baya.ControlBayas.length > 0 ? baya.ControlBayas[0].id_control_baya : null },
+        medida: { data: baya.ControlBayas.length > 0 ? baya.ControlBayas[0].medida : null, isValid: true, minLength: 1, maxLength: 50 },
         id_baya: { data: baya.id_baya },
         id_control: { data: control.id_control },
     });
@@ -28,8 +29,14 @@ const MedidaBayaScreen = ({ navigation, route }) => {
     }
 
     const save = async () => {
-        const response = await fetch(`${API_URL}/control-baya/`, {
-            method: 'POST',
+        const urlEnpoint = `${API_URL}/control-baya/${(dataForm.id_control_baya.data) ? dataForm.id_control_baya.data : ''}`;
+        const methodRequest = (!dataForm.id_control_baya.data) ? 'POST' : 'PUT';
+        console.log(urlEnpoint);
+        console.log(methodRequest);
+        console.log(JSON.stringify(getDataForm()))
+
+        const response = await fetch(urlEnpoint, {
+            method: methodRequest,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${loginState.token}`,
@@ -48,68 +55,63 @@ const MedidaBayaScreen = ({ navigation, route }) => {
             Alert.alert('Error!', rpt.message, [{ text: 'Ok' }]);
         }
     }
-
-    const ButtonAction = ({ text, onPress }) => {
-        return (
-            <TouchableOpacity
-                style={{
-                    width: 130,
-                    height: 36,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: COLORS.primary,
-                    borderRadius: 10,
-                    marginHorizontal: SIZES.padding * 0.5,
-                }}
-                onPress={onPress}
-            >
-                <Text style={{
-                    fontFamily: 'regular',
-                    fontSize: SIZES.body4,
-                    lineHeight: 20,
-                    color: COLORS.white
-                }} > {text}</Text>
-            </TouchableOpacity>
-        )
-    }
-
     useEffect(() => {
     }, [])
-
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Medida de Bayas</Text>
-            </View>
-
-            <View style={styles.section}>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}>Detalle:</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}> {baya.detalle}</Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}>Posición Líneal:</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}> {baya.posicion_lineal}</Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}>Posición Fila:</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}> {baya.posicion_fila}</Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, verticalAlign: 'middle' }}>Medida:</Text>
-                    <TextInput
-                        placeholderTextColor="#666666"
-                        value={dataForm.medida.data}
-                        onChangeText={(val) => textInputChange(val, 'medida')}
+        <ImageBackground
+            source={images.Fondo2}
+            style={styles.background}>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Image
+                        source={images.profile}
+                        resizeMode="cover"
+                        style={{ height: 60, width: 60, borderRadius: 15, marginRight: 20, marginLeft: 20 }}
                     />
+                    <View>
+                        <Text style={styles.name}>{loginState.nombre_completo}</Text>
+                        <Text style={styles.role}>Agricultor</Text>
+                    </View>
                 </View>
+                <Text style={styles.title}>Medida de Baya</Text>
+                <View style={styles.form} >
 
-                <View>
-                    <ButtonAction text={"Guardar"} onPress={() => save()} />
+                    <View style={styles.formRow}>
+                        <Text style={styles.label}>Detalle</Text>
+                        <Text style={styles.label1}>{baya.detalle}</Text>
+                    </View>
+                    <View style={styles.formRow}>
+                        <Text style={styles.label}>Posición Lineal</Text>
+                        <Text style={styles.label1}> {baya.posicion_lineal}</Text>
+                    </View>
+                    <View style={styles.formRow}>
+                        <Text style={styles.label}>Posición   Fila</Text>
+                        <Text style={styles.label1}> {baya.posicion_fila}</Text>
+                    </View>
+                    <View style={styles.formRow}>
+                        <Text style={styles.label}>Medida</Text>
+                        <TextInput
+                            placeholderTextColor="#666666"
+                            value={dataForm.medida.data}
+                            style={{
+                                fontSize: 40,
+                                fontWeight: 'bold',
+                                borderColor: '#562A66',
+                                color: '#562A66',
+                                borderWidth: 2,
+                                borderRadius: 20,
+                                width: 150,
+                                textAlign: 'center',
+                            }}
+                            onChangeText={(val) => textInputChange(val, 'medida')}
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.button} onPress={() => save()}  >
+                        <Text style={styles.buttonText}>Guardar</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </ImageBackground>
     );
 };
-
 export default MedidaBayaScreen;
